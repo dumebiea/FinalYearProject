@@ -1,0 +1,15 @@
+flask
+flask-sqlalchemy
+flask-jwt-extended
+flask-mail
+flask-cors
+flask-apscheduler
+apscheduler
+transformers
+torch
+scikit-learn
+pandas
+numpy
+python-dotenv
+nltk
+newsapi-python

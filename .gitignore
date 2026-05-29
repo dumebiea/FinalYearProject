@@ -1,0 +1,27 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+
+# Database
+*.db
+*.sqlite
+
+# Logs
+*.log
+
+# Model files (too large for GitHub)
+model/best_bert_model/
+model/*.pkl
+model/*.csv
+
+# Node
+node_modules/
+npm-debug.log
+
+# OS
+.DS_Store
+Thumbs.db

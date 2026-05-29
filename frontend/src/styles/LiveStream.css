@@ -1,0 +1,346 @@
+.live-stream-container {
+  background: var(--bg-card);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px var(--shadow);
+  margin-bottom: 24px;
+}
+
+.stream-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #185FA5;
+  padding-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.stream-header h3 {
+  margin: 0;
+  color: var(--text-primary);
+  font-size: 18px;
+}
+
+/* Right side of header: status + controls */
+.stream-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.stream-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Pause/Resume and Reset buttons */
+.stream-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.stream-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--bg-inner);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease, border-color 0.15s ease !important;
+}
+
+.stream-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--accent);
+}
+
+.reset-btn:hover {
+  border-color: #C0392B !important;
+  color: #C0392B;
+}
+
+/* Status label beside button */
+.stream-status-label {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.stream-status-label.streaming { color: #27AE60; }
+.stream-status-label.paused    { color: #E67E22; }
+
+/* Paused dot override */
+.status-indicator.paused-dot {
+  background-color: #E67E22;
+  animation: none;
+}
+
+/* Reset success message */
+.stream-reset-msg {
+  background: var(--success-bg);
+  color: var(--success-text);
+  border-left: 3px solid #27AE60;
+  border-radius: 6px;
+  padding: 7px 12px;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* Confirmation dialog — sits above the feed, inside the container */
+.stream-confirm-overlay {
+  position: relative;
+  margin-bottom: 12px;
+}
+
+.stream-confirm-box {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-left: 4px solid #C0392B;
+  border-radius: 8px;
+  padding: 14px 16px;
+  box-shadow: 0 4px 16px var(--shadow-strong);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.stream-confirm-text {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+  flex: 1;
+}
+
+.stream-confirm-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.stream-confirm-yes {
+  background: #C0392B;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease !important;
+}
+
+.stream-confirm-yes:hover {
+  background: #A93226;
+}
+
+.stream-confirm-no {
+  background: var(--bg-inner);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease !important;
+}
+
+.stream-confirm-no:hover {
+  background: var(--bg-hover);
+}
+
+.status-indicator {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  animation: pulse 1.5s infinite;
+  transition: none !important;
+}
+
+.status-indicator.streaming { background-color: #27AE60; }
+.status-indicator.error     { background-color: #C0392B; }
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.5; }
+}
+
+.tweet-count {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.tweets-feed {
+  max-height: 400px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tweet-item {
+  padding: 12px;
+  background: var(--bg-inner);
+  border-left: 4px solid #185FA5;
+  border-radius: 6px;
+}
+
+.tweet-text {
+  font-size: 13px;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+  line-height: 1.4;
+}
+
+.tweet-meta {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.sentiment-badge {
+  color: white;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+.confidence {
+  color: var(--text-secondary);
+}
+
+.location {
+  color: #185FA5;
+  font-weight: 500;
+}
+
+.time {
+  color: var(--text-muted);
+  margin-left: auto;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 20px;
+}
+
+/* ── Ensemble tweet item ──────────────────────────────────── */
+
+.tweet-item.ensemble {
+  border-left-color: #8E44AD;
+}
+
+.ensemble-meta {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+}
+
+.ensemble-mini-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+}
+
+.ensemble-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.ensemble-model-short {
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.ensemble-mini-badge {
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 10px;
+}
+
+.ensemble-mini-conf {
+  color: var(--text-secondary);
+}
+
+.ensemble-arrow {
+  color: #185FA5;
+  font-weight: 700;
+  margin: 0 2px;
+}
+
+.ensemble-votes {
+  color: #185FA5;
+  font-weight: 700;
+  font-size: 11px;
+}
+
+.ensemble-bottom-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-size: 11px;
+}
+
+.ensemble-bottom-row .time {
+  margin-left: auto;
+}
+
+/* ── Upload page additions ───────────────────────────────── */
+
+.results-model-tag {
+  color: #185FA5;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.ensemble-results-table th,
+.ensemble-results-table td {
+  font-size: 0.82rem;
+}
+
+.ensemble-summary-bar {
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--bg-info);
+  border-radius: 8px;
+  border-left: 4px solid #185FA5;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.ensemble-breakdown-table {
+  margin: 16px 0;
+}
+
+.ensemble-breakdown-table h4 {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}

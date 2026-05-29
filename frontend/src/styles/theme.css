@@ -1,0 +1,176 @@
+/* ═══════════════════════════════════════════════════════════
+   Theme CSS Variables
+   Light mode is the default (:root).
+   Dark mode overrides live under [data-theme="dark"].
+   ═══════════════════════════════════════════════════════════ */
+
+:root {
+  /* Backgrounds */
+  --bg-body:         #F4F7FB;
+  --bg-card:         #FFFFFF;
+  --bg-inner:        #F8F9FB;
+  --bg-input:        #F8F9FB;
+  --bg-table-head:   #F8F9FA;
+  --bg-hover:        #F8F9FA;
+  --bg-info:         #EBF5FB;
+  --bg-alerts:       linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  --bg-modal:        #FFFFFF;
+  --bg-close-btn:    #f0f0f0;
+  --bg-close-hover:  #dddddd;
+  --bg-results-hover:#EBF5FB;
+  --bg-secondary-btn:#E8E8E8;
+  --bg-ensemble-verdict: #F0F6FF;
+  --bg-login:        #F4F7FB;
+
+  /* Text */
+  --text-primary:   #1a1a1a;
+  --text-secondary: #555555;
+  --text-muted:     #888888;
+  --text-dark:      #333333;
+
+  /* Borders & Dividers */
+  --border:         #E0E0E0;
+  --border-subtle:  #E2E8F0;
+  --border-file:    #E0E0E0;
+
+  /* Shadows */
+  --shadow:         rgba(0, 0, 0, 0.08);
+  --shadow-strong:  rgba(0, 0, 0, 0.15);
+  --shadow-modal:   rgba(0, 0, 0, 0.25);
+
+  /* Sidebar */
+  --sidebar-bg:     #185FA5;
+  --sidebar-text:   #FFFFFF;
+
+  /* Accent — primary brand blue */
+  --accent:         #185FA5;
+  --accent-hover:   #0E4A7A;
+
+  /* Charts */
+  --chart-grid:     rgba(0, 0, 0, 0.08);
+  --chart-tick:     #666666;
+  --chart-legend:   #444444;
+  --chart-title:    #444444;
+
+  /* Status messages */
+  --error-bg:       #FADBD8;
+  --error-text:     #C0392B;
+  --success-bg:     #D5F4E6;
+  --success-text:   #27AE60;
+
+  /* Alert banners */
+  --alert-crisis-bg:  #FADBD8;
+  --alert-warning-bg: #FCF3CF;
+
+  /* Heatmap rows */
+  --heatmap-crisis:   rgba(240, 128, 128, 0.18);
+  --heatmap-warning:  rgba(230, 126, 34, 0.18);
+  --heatmap-normal:   rgba(39, 174, 96, 0.12);
+
+  /* Period badge (Alerts page) */
+  --badge-bg:     #f0f4f8;
+  --badge-text:   #555555;
+  --badge-border: #dde3ea;
+
+  /* Keyword tags (Alerts page) */
+  --keyword-bg:     #eef4ff;
+  --keyword-text:   #185FA5;
+  --keyword-border: #c0d4f5;
+
+  /* Spinner */
+  --spinner-track: #E0E0E0;
+}
+
+/* ── Dark Mode ─────────────────────────────────────────────── */
+
+[data-theme="dark"] {
+  /* Backgrounds */
+  --bg-body:         #0F172A;
+  --bg-card:         #1E293B;
+  --bg-inner:        #334155;
+  --bg-input:        #1E293B;
+  --bg-table-head:   #334155;
+  --bg-hover:        #2D3748;
+  --bg-info:         #1E3A5F;
+  --bg-alerts:       linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+  --bg-modal:        #1E293B;
+  --bg-close-btn:    #334155;
+  --bg-close-hover:  #475569;
+  --bg-results-hover:#2D4A6A;
+  --bg-secondary-btn:#334155;
+  --bg-ensemble-verdict: #1E3A5F;
+  --bg-login:        #0F172A;
+
+  /* Text */
+  --text-primary:   #F1F5F9;
+  --text-secondary: #CBD5E1;
+  --text-muted:     #94A3B8;
+  --text-dark:      #E2E8F0;
+
+  /* Borders & Dividers */
+  --border:         #334155;
+  --border-subtle:  #475569;
+  --border-file:    #475569;
+
+  /* Shadows */
+  --shadow:         rgba(0, 0, 0, 0.4);
+  --shadow-strong:  rgba(0, 0, 0, 0.55);
+  --shadow-modal:   rgba(0, 0, 0, 0.65);
+
+  /* Sidebar */
+  --sidebar-bg:     #0F172A;
+  --sidebar-text:   #F1F5F9;
+
+  /* Accent */
+  --accent:         #3B82F6;
+  --accent-hover:   #2563EB;
+
+  /* Charts */
+  --chart-grid:     rgba(255, 255, 255, 0.08);
+  --chart-tick:     #94A3B8;
+  --chart-legend:   #CBD5E1;
+  --chart-title:    #CBD5E1;
+
+  /* Status messages */
+  --error-bg:       rgba(192, 57, 43, 0.22);
+  --error-text:     #FC8181;
+  --success-bg:     rgba(39, 174, 96, 0.22);
+  --success-text:   #68D391;
+
+  /* Alert banners */
+  --alert-crisis-bg:  rgba(192, 57, 43, 0.22);
+  --alert-warning-bg: rgba(230, 126, 34, 0.22);
+
+  /* Heatmap rows */
+  --heatmap-crisis:  rgba(192, 57, 43, 0.28);
+  --heatmap-warning: rgba(230, 126, 34, 0.22);
+  --heatmap-normal:  rgba(39, 174, 96, 0.20);
+
+  /* Period badge */
+  --badge-bg:     #334155;
+  --badge-text:   #94A3B8;
+  --badge-border: #475569;
+
+  /* Keyword tags */
+  --keyword-bg:     rgba(59, 130, 246, 0.15);
+  --keyword-text:   #60A5FA;
+  --keyword-border: rgba(59, 130, 246, 0.3);
+
+  /* Spinner */
+  --spinner-track: #334155;
+}
+
+/* ── Smooth theme transitions ────────────────────────────────
+   Applied globally so every element animates when the theme
+   attribute changes. Does not interfere with keyframe animations
+   (spin, pulse, slide) since those use transform/opacity.
+   ─────────────────────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}

@@ -1,0 +1,84 @@
+/* ═══════════════════════════════════════════════
+   Navbar additions — How To Use + Sound toggle
+   ═══════════════════════════════════════════════ */
+
+/* Row that holds the theme toggle + sound toggle side by side */
+.navbar-toggles-row {
+  display: flex;
+  gap: 6px;
+  width: 100%;
+}
+
+/* Shrunken variant of the theme toggle when sharing a row */
+.theme-toggle-btn--half {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Sound on/off icon button */
+.sound-toggle-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 9px 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.2s ease, border-color 0.2s ease !important;
+}
+
+.sound-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.sound-toggle-btn--muted {
+  opacity: 0.55;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.sound-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* "How To Use" link — styled like the theme-toggle-btn
+   but uses accent teal so it stands out */
+.how-to-use-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease !important;
+}
+
+.how-to-use-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.how-to-use-btn--active {
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.how-to-use-icon {
+  font-size: 1rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.how-to-use-label {
+  font-size: 0.82rem;
+}

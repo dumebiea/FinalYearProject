@@ -1,0 +1,420 @@
+/* Alerts Page — Sentiment Forecast and Crisis Prediction */
+
+.alerts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: var(--bg-alerts);
+  min-height: 100vh;
+}
+
+/* ── Header ─────────────────────────────────────────────── */
+
+.alerts-header {
+  margin-bottom: 1.5rem;
+}
+
+.alerts-header h1 {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 0.4rem 0;
+}
+
+.alerts-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin: 0;
+  font-weight: 500;
+}
+
+/* ── Loading ─────────────────────────────────────────────── */
+
+.alerts-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  background: var(--bg-card);
+  border-radius: 12px;
+  margin: 2rem auto;
+}
+
+.forecast-loading {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+/* ── Region Selector Bar ─────────────────────────────────── */
+
+.region-selector-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 1.5rem;
+  background: var(--bg-card);
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.region-selector-bar label {
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.region-selector-bar select {
+  padding: 0.5rem 0.8rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  background: var(--bg-input);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color 0.2s ease !important;
+}
+
+.region-selector-bar select:hover,
+.region-selector-bar select:focus {
+  border-color: #C0392B;
+  outline: none;
+}
+
+/* ── Forecast Blocks ─────────────────────────────────────── */
+
+.forecast-block {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.8rem 2rem;
+  margin-bottom: 1.2rem;
+  box-shadow: 0 2px 8px var(--shadow);
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.forecast-block-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.forecast-block-header h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.period-badge {
+  background: var(--badge-bg);
+  color: var(--badge-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  border: 1px solid var(--badge-border);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.forecast-block-desc {
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  margin: 0 0 1.2rem 0;
+  line-height: 1.5;
+}
+
+/* ── Part 1: Chart ───────────────────────────────────────── */
+
+.trend-chart-wrapper {
+  height: 280px;
+  position: relative;
+}
+
+.no-chart-msg {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+}
+
+/* ── Part 2: Status Summary ──────────────────────────────── */
+
+.status-summary-block {
+  padding-bottom: 1.5rem;
+}
+
+.status-cards-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+
+.status-card {
+  background: var(--bg-inner);
+  border-radius: 10px;
+  padding: 1.2rem 1.4rem;
+  border-top: 4px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.risk-card {
+  border-top-width: 4px;
+}
+
+.status-card-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--text-muted);
+}
+
+.status-card-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.status-card-sub {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+}
+
+/* Keywords card */
+.keywords-card {
+  border-top-color: #185FA5;
+}
+
+.keywords-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.4rem;
+}
+
+.keyword-tag {
+  background: var(--keyword-bg);
+  color: var(--keyword-text);
+  border: 1px solid var(--keyword-border);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* ── Part 3: Plain English Prediction ────────────────────── */
+
+.prediction-block {
+  border-left: 4px solid #E67E22;
+}
+
+.data-note {
+  background: var(--alert-warning-bg);
+  border-left: 3px solid #E67E22;
+  border-radius: 6px;
+  padding: 0.7rem 1rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+}
+
+.plain-english-box {
+  background: var(--bg-inner);
+  border-radius: 10px;
+  padding: 1.4rem 1.6rem;
+  border-left: 4px solid #C0392B;
+}
+
+.plain-english-box p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.forecast-horizon-note {
+  margin-top: 1rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* ── Crisis Risk by Region ───────────────────────────────── */
+
+.region-section {
+  margin-top: 2.5rem;
+}
+
+.alerts-section {
+  margin-bottom: 3rem;
+  animation: slideIn 0.6s ease-out;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.2rem;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.section-header h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.section-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.region-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.2rem;
+}
+
+.region-card {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1.3rem 1.5rem;
+  border-left: 5px solid #999;
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease !important;
+  box-shadow: 0 2px 8px var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.region-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px var(--shadow-strong);
+}
+
+.region-card.selected {
+  background: var(--bg-inner);
+  border-left-width: 8px;
+  box-shadow: 0 6px 18px var(--shadow-strong);
+}
+
+.region-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.region-header h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0;
+  flex: 1;
+}
+
+.region-sentiment {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #C0392B;
+  min-width: 60px;
+  text-align: right;
+}
+
+.region-risk {
+  margin: 0;
+}
+
+.risk-badge {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.region-reason {
+  background: var(--bg-inner);
+  padding: 0.7rem 0.9rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--border);
+  flex: 1;
+}
+
+.region-reason p {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  font-style: italic;
+}
+
+.region-tweets {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* ── Responsive ──────────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .alerts-container     { padding: 1rem; }
+  .alerts-header h1     { font-size: 1.6rem; }
+  .status-cards-row     { grid-template-columns: 1fr; }
+  .trend-chart-wrapper  { height: 220px; }
+  .region-grid          { grid-template-columns: 1fr; gap: 0.8rem; }
+  .section-header       { flex-direction: column; align-items: flex-start; }
+  .forecast-block       { padding: 1.2rem; }
+  .region-selector-bar  { flex-direction: column; align-items: flex-start; }
+  .region-selector-bar select { width: 100%; }
+}
+
+@media (max-width: 480px) {
+  .alerts-container       { padding: 0.8rem; }
+  .alerts-header h1       { font-size: 1.3rem; }
+  .forecast-block-header h2 { font-size: 1.05rem; }
+  .status-card-value      { font-size: 1.2rem; }
+  .trend-chart-wrapper    { height: 190px; }
+  .plain-english-box p    { font-size: 0.92rem; }
+}
+
+/* ── Print ───────────────────────────────────────────────── */
+
+@media print {
+  .alerts-container   { background: white; }
+  .region-selector-bar { display: none; }
+  .region-card        { page-break-inside: avoid; }
+}

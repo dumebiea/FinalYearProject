@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "additionalDirectories": [
+      "c:\\Users\\HP\\Desktop\\food-crisis-sentiment-system"
+    ],
+    "allow": [
+      "Bash(venv\\\\Scripts\\\\python.exe app.py)"
+    ]
+  }
+}

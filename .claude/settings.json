@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Start-Process -FilePath \"cmd.exe\" -ArgumentList \"/c cd /d `\"c:\\\\Users\\\\HP\\\\Desktop\\\\food-crisis-sentiment-system\\\\backend`\" && venv\\\\Scripts\\\\python.exe app.py > backend.log 2>&1\" -WindowStyle Normal)"
+    ]
+  }
+}
