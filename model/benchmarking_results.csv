@@ -1,0 +1,5 @@
+Model,Accuracy,F1_Score,Precision,Recall
+SVM,67.78,0.6779,0.6782,0.6778
+Logistic Regression,68.75,0.6879,0.6894,0.6875
+NaijaSenti BERT,79.49,0.7948,0.795,0.7949
+Ensemble,80.11,0.8012,0.8013,0.8011
