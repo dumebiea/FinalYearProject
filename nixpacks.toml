@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["git-lfs"]
+
+[phases.build]
+cmds = ["git lfs pull", "pip install -r backend/requirements.txt"]
+
+[start]
+cmd = "python backend/app.py"

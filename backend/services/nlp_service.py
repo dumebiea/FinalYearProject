@@ -267,8 +267,30 @@ class NLPService:
                             "label": lbl, "confidence": conf, "model_used": mname})
         return results
 
+    def _weighted_vote(self, individual):
+        # Weights reflect model accuracy hierarchy from Colab evaluation:
+        #   BERT (79.49%) = 3,  LR (68.75%) = 2,  SVM (67.78%) = 1
+        # Only possible tie: LR+SVM agree vs BERT (3 vs 3) → BERT wins.
+        MODEL_WEIGHTS = {
+            "NaijaSenti (XLM-RoBERTa)": 3,
+            "Logistic Regression": 2,
+            "SVM": 1,
+        }
+        totals     = {}
+        bert_label = None
+        for pred in individual:
+            weight = MODEL_WEIGHTS.get(pred["model"], 1)
+            totals[pred["label"]] = totals.get(pred["label"], 0) + weight
+            if pred["model"] == "NaijaSenti (XLM-RoBERTa)":
+                bert_label = pred["label"]
+        max_w   = max(totals.values())
+        winners = [lbl for lbl, w in totals.items() if w == max_w]
+        if len(winners) == 1:
+            return winners[0]
+        return bert_label if bert_label else winners[0]
+
     def predict_batch_ensemble(self, raw_tweets):
-        """Ensemble-classify a batch using majority voting across all models."""
+        """Ensemble-classify a batch using weighted voting across all models."""
         cleaned = [clean_tweet(t) for t in raw_tweets]
 
         bert_preds = self._predict_bert_batch(cleaned) if self.bert_model else None
@@ -287,8 +309,7 @@ class NLPService:
                 individual.append({"model": "Logistic Regression",
                                    "label": lr_preds[i][0], "confidence": lr_preds[i][1]})
 
-            votes = Counter(r["label"] for r in individual)
-            final_label, vote_count = votes.most_common(1)[0]
+            final_label = self._weighted_vote(individual)
             total = len(individual)
             agreeing = [r["confidence"] for r in individual if r["label"] == final_label]
             avg_conf = round(sum(agreeing) / len(agreeing), 1)
@@ -296,12 +317,12 @@ class NLPService:
             results.append({"tweet": raw, "cleaned": cleaned[i],
                             "ensemble": True, "individual": individual,
                             "label": final_label, "confidence": avg_conf,
-                            "votes": vote_count, "total": total, "model_used": "Ensemble"})
+                            "total": total, "model_used": "Ensemble"})
         return results
 
     def predict_ensemble(self, raw_tweet):
         """
-        Run all available models and combine via majority voting.
+        Run all available models and combine via weighted voting.
         Returns individual predictions plus the final ensemble decision.
         """
         cleaned = clean_tweet(raw_tweet)
@@ -318,8 +339,7 @@ class NLPService:
             label, conf = self._predict_lr(cleaned)
             individual.append({"model": "Logistic Regression", "label": label, "confidence": conf})
 
-        votes = Counter(r["label"] for r in individual)
-        final_label, vote_count = votes.most_common(1)[0]
+        final_label = self._weighted_vote(individual)
         total = len(individual)
 
         agreeing_confs = [r["confidence"] for r in individual if r["label"] == final_label]
@@ -332,6 +352,5 @@ class NLPService:
             "individual": individual,
             "label": final_label,
             "confidence": avg_confidence,
-            "votes": vote_count,
             "total": total,
         }
