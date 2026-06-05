@@ -267,83 +267,139 @@ class NLPService:
                             "label": lbl, "confidence": conf, "model_used": mname})
         return results
 
-    def _weighted_vote(self, individual):
-        # Weights reflect model accuracy hierarchy from Colab evaluation:
-        #   BERT (79.49%) = 3,  LR (68.75%) = 2,  SVM (67.78%) = 1
-        # Only possible tie: LR+SVM agree vs BERT (3 vs 3) → BERT wins.
-        MODEL_WEIGHTS = {
-            "NaijaSenti (XLM-RoBERTa)": 3,
-            "Logistic Regression": 2,
-            "SVM": 1,
-        }
-        totals     = {}
-        bert_label = None
-        for pred in individual:
-            weight = MODEL_WEIGHTS.get(pred["model"], 1)
-            totals[pred["label"]] = totals.get(pred["label"], 0) + weight
-            if pred["model"] == "NaijaSenti (XLM-RoBERTa)":
-                bert_label = pred["label"]
-        max_w   = max(totals.values())
-        winners = [lbl for lbl, w in totals.items() if w == max_w]
-        if len(winners) == 1:
-            return winners[0]
-        return bert_label if bert_label else winners[0]
+    def _bert_proba(self, cleaned_text):
+        """Return raw softmax probability array [P_neg, P_neu, P_pos] from BERT."""
+        enc = self.tokenizer(
+            cleaned_text,
+            max_length=64,
+            padding="max_length",
+            truncation=True,
+            return_tensors="pt",
+        )
+        ids = enc["input_ids"].to(self.device)
+        mask = enc["attention_mask"].to(self.device)
+        with torch.no_grad():
+            out = self.bert_model(input_ids=ids, attention_mask=mask)
+            probs = torch.softmax(out.logits, dim=1).cpu().numpy()[0]
+        return probs
+
+    def _bert_proba_batch(self, cleaned_texts):
+        """Return raw softmax probability matrix, shape [N, 3], from BERT."""
+        enc = self.tokenizer(
+            cleaned_texts,
+            max_length=64,
+            padding="max_length",
+            truncation=True,
+            return_tensors="pt",
+        )
+        ids = enc["input_ids"].to(self.device)
+        mask = enc["attention_mask"].to(self.device)
+        with torch.no_grad():
+            out = self.bert_model(input_ids=ids, attention_mask=mask)
+            probs = torch.softmax(out.logits, dim=1).cpu().numpy()
+        return probs
+
+    def _svm_proba(self, cleaned_text):
+        """Return raw SVM probability array [P_neg, P_neu, P_pos]."""
+        X = self.vectorizer.transform([cleaned_text])
+        return self.svm.predict_proba(X)[0]
+
+    def _lr_proba(self, cleaned_text):
+        """Return raw LR probability array [P_neg, P_neu, P_pos]."""
+        X = self.vectorizer.transform([cleaned_text])
+        return self.lr_model.predict_proba(X)[0]
 
     def predict_batch_ensemble(self, raw_tweets):
-        """Ensemble-classify a batch using weighted voting across all models."""
+        """Ensemble-classify a batch using equal-weight soft voting across all models."""
         cleaned = [clean_tweet(t) for t in raw_tweets]
+        classes = self.encoder.classes_.tolist()
 
-        bert_preds = self._predict_bert_batch(cleaned) if self.bert_model else None
-        svm_preds  = [self._predict_svm(c) for c in cleaned]
-        lr_preds   = [self._predict_lr(c) for c in cleaned] if self.lr_model else None
+        bert_probas = self._bert_proba_batch(cleaned) if self.bert_model else None
+        svm_probas  = np.array([self._svm_proba(c) for c in cleaned])
+        lr_probas   = np.array([self._lr_proba(c) for c in cleaned]) if self.lr_model else None
 
         results = []
         for i, raw in enumerate(raw_tweets):
-            individual = []
-            if bert_preds:
-                individual.append({"model": "NaijaSenti (XLM-RoBERTa)",
-                                   "label": bert_preds[i][0], "confidence": bert_preds[i][1]})
-            individual.append({"model": "SVM",
-                               "label": svm_preds[i][0], "confidence": svm_preds[i][1]})
-            if lr_preds:
-                individual.append({"model": "Logistic Regression",
-                                   "label": lr_preds[i][0], "confidence": lr_preds[i][1]})
+            distributions = []
+            individual    = []
 
-            final_label = self._weighted_vote(individual)
-            total = len(individual)
-            agreeing = [r["confidence"] for r in individual if r["label"] == final_label]
-            avg_conf = round(sum(agreeing) / len(agreeing), 1)
+            if bert_probas is not None:
+                bp = bert_probas[i]
+                distributions.append(bp)
+                bi = int(np.argmax(bp))
+                individual.append({"model": "NaijaSenti (XLM-RoBERTa)",
+                                   "label": classes[bi],
+                                   "confidence": round(float(bp[bi]) * 100, 1)})
+
+            sp = svm_probas[i]
+            distributions.append(sp)
+            si = int(np.argmax(sp))
+            individual.append({"model": "SVM",
+                               "label": classes[si],
+                               "confidence": round(float(sp[si]) * 100, 1)})
+
+            if lr_probas is not None:
+                lp = lr_probas[i]
+                distributions.append(lp)
+                li = int(np.argmax(lp))
+                individual.append({"model": "Logistic Regression",
+                                   "label": classes[li],
+                                   "confidence": round(float(lp[li]) * 100, 1)})
+
+            avg_proba   = np.mean(distributions, axis=0)
+            final_idx   = int(np.argmax(avg_proba))
+            final_label = classes[final_idx]
+            confidence  = round(float(avg_proba[final_idx]) * 100, 1)
+            votes       = sum(1 for m in individual if m["label"] == final_label)
 
             results.append({"tweet": raw, "cleaned": cleaned[i],
                             "ensemble": True, "individual": individual,
-                            "label": final_label, "confidence": avg_conf,
-                            "total": total, "model_used": "Ensemble"})
+                            "label": final_label, "confidence": confidence,
+                            "votes": votes, "total": len(individual),
+                            "model_used": "Ensemble"})
         return results
 
     def predict_ensemble(self, raw_tweet):
         """
-        Run all available models and combine via weighted voting.
-        Returns individual predictions plus the final ensemble decision.
+        Run all available models and combine via equal-weight soft voting.
+        Each model contributes its full probability distribution [P_neg, P_neu, P_pos].
+        Distributions are averaged element-wise; the class with the highest averaged
+        probability is the final prediction.
         """
         cleaned = clean_tweet(raw_tweet)
-        individual = []
+        classes = self.encoder.classes_.tolist()
+
+        distributions = []
+        individual    = []
 
         if self.bert_model is not None:
-            label, conf = self._predict_bert(cleaned)
-            individual.append({"model": "NaijaSenti (XLM-RoBERTa)", "label": label, "confidence": conf})
+            bp = self._bert_proba(cleaned)
+            distributions.append(bp)
+            bi = int(np.argmax(bp))
+            individual.append({"model": "NaijaSenti (XLM-RoBERTa)",
+                               "label": classes[bi],
+                               "confidence": round(float(bp[bi]) * 100, 1)})
 
-        label, conf = self._predict_svm(cleaned)
-        individual.append({"model": "SVM", "label": label, "confidence": conf})
+        sp = self._svm_proba(cleaned)
+        distributions.append(sp)
+        si = int(np.argmax(sp))
+        individual.append({"model": "SVM",
+                           "label": classes[si],
+                           "confidence": round(float(sp[si]) * 100, 1)})
 
         if self.lr_model is not None:
-            label, conf = self._predict_lr(cleaned)
-            individual.append({"model": "Logistic Regression", "label": label, "confidence": conf})
+            lp = self._lr_proba(cleaned)
+            distributions.append(lp)
+            li = int(np.argmax(lp))
+            individual.append({"model": "Logistic Regression",
+                               "label": classes[li],
+                               "confidence": round(float(lp[li]) * 100, 1)})
 
-        final_label = self._weighted_vote(individual)
-        total = len(individual)
-
-        agreeing_confs = [r["confidence"] for r in individual if r["label"] == final_label]
-        avg_confidence = round(sum(agreeing_confs) / len(agreeing_confs), 1)
+        avg_proba   = np.mean(distributions, axis=0)
+        final_idx   = int(np.argmax(avg_proba))
+        final_label = classes[final_idx]
+        confidence  = round(float(avg_proba[final_idx]) * 100, 1)
+        votes       = sum(1 for m in individual if m["label"] == final_label)
 
         return {
             "tweet": raw_tweet,
@@ -351,6 +407,7 @@ class NLPService:
             "ensemble": True,
             "individual": individual,
             "label": final_label,
-            "confidence": avg_confidence,
-            "total": total,
+            "confidence": confidence,
+            "votes": votes,
+            "total": len(individual),
         }

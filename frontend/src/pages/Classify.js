@@ -203,7 +203,7 @@ function Classify() {
               {result.votes} out of {result.total} models agreed: <strong>{result.label}</strong>
             </div>
             <div className="confidence-display">
-              Avg Confidence (agreeing models): {parseFloat(result.confidence).toFixed(1)}%
+              Ensemble confidence: {parseFloat(result.confidence).toFixed(1)}%
             </div>
           </div>
 
